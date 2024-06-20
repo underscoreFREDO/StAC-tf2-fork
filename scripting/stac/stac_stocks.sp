@@ -638,11 +638,15 @@ void PrintToConsoleAllAdmins(const char[] format, any ...)
 
     for (int i = 1; i <= MaxClients; i++)
     {
-        if (IsValidAdmin(i) || IsValidSrcTV(i))
+        if (IsValidAdmin(i))
         {
             SetGlobalTransTarget(i);
             VFormat(buffer, sizeof(buffer), format, 2);
             PrintToConsole(i, "%s", buffer);
+        }
+        if (IsValidSrcTV(i))
+        {
+            SourceTV_PrintToDemoConsole(buffer);
         }
     }
 }
