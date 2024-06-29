@@ -126,6 +126,20 @@ void DoStACGamedata()
     {
         SetFailState( "Failed to get CTFPlayer::m_fFlags offset." );
     }
+
+    int TeleOffset = GameConfGetOffset(stac_gamedata, "Teleport");
+
+    if ( TeleOffset == -1 )
+    {
+        SetFailState( "Failed to get teleport offset." );
+    }
+    
+    TeleportHook = DHookCreate(TeleOffset, HookType_Entity, ReturnType_Void, ThisPointer_CBaseEntity, TeleportHookCallback);
+    // Teleport function has 3 params: new position, new angle, new velocity
+    // Function WILL break if we do not add the same amount or same type of params to our hook!!!
+    DHookAddParam(TeleportHook, HookParamType_VectorPtr);
+    DHookAddParam(TeleportHook, HookParamType_VectorPtr);
+    DHookAddParam(TeleportHook, HookParamType_VectorPtr);
 }
 
 public MRESReturn Detour_CBasePlayer__ProcessUsercmds(int entity, DHookParam hParams)
@@ -143,6 +157,23 @@ public MRESReturn Detour_CBasePlayer__ProcessUsercmds(int entity, DHookParam hPa
     return MRES_Ignored;
 }
 
+// void CBaseEntity::Teleport( const Vector *newPosition, const QAngle *newAngles, const Vector *newVelocity )
+public MRESReturn TeleportHookCallback(pThis, DHookParam hParams)
+{   
+    if (!IsValidClient(pThis))
+    {
+        return MRES_Ignored;
+    }
+
+    timeSinceTeled[pThis] = GetEngineTime();
+
+    if (stac_debug.BoolValue)
+    {
+        StacLog("Teleport detected on client %N", pThis);
+    }
+    
+    return MRES_Ignored;
+}
 
 public MRESReturn Detour_CNetChan__ProcessPacket(Address pThis, DHookParam hParams)
 {
@@ -204,4 +235,9 @@ int GetSignonState(Address IClient)
 
     int signonState = view_as<int>( DerefPtr( (IClient - Offset_IClient_HACK) + Offset_SignonState ) );
     return signonState;
+}
+
+public RemovalCB(hookid)
+{
+	PrintToServer("Removed hook %i", hookid);
 }

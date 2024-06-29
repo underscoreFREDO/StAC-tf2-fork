@@ -272,6 +272,7 @@ public void OnClientPutInServer(int cl)
     if (IsValidClientOrBot(cl))
     {
         SDKHook(cl, SDKHook_OnTakeDamage, hOnTakeDamage);
+        DHookEntity(TeleportHook, false, cl, RemovalCB);
     }
 
     OnClientPutInServer_jaypatch(cl);
