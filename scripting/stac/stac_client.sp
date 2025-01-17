@@ -619,6 +619,9 @@ void ClearClBasedVars(int userid)
     signonStateFor          [cl] = -1;
 
     timeSinceLastRecvFor    [cl] = 0.0;
+
+    // autorecord
+    recordClient            [cl] = 0;
 }
 
 /********** TIMER FOR NETINFO **********/

@@ -6,6 +6,7 @@ public void OnConfigsExecuted()
 {
     checkNativesEtc(null);
     configsExecuted = true;
+    prepareSourceTV();
 }
 
 public void OnMapStart()
@@ -162,6 +163,8 @@ void NukeTimers()
     {
         delete QueryTimer[cl];
     }
+    delete RestartMapTimer;
+    delete RecordTimer;
 }
 
 // recreate the timers we just nuked

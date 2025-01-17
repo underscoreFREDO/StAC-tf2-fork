@@ -31,6 +31,7 @@ ConVar stac_max_connections_from_ip;
 ConVar stac_work_with_sv_cheats;
 ConVar stac_prevent_connect_spam;
 ConVar stac_print_to_admin_console;
+ConVar stac_autorecord;
 
 /***** Server based stuff *****/
 
@@ -48,6 +49,7 @@ float ServerLagWaitLength = 5.0;
 // misc server info
 char hostipandport[24];
 char demoname[128];
+char fulldemoname[128];
 int demotick = -1;
 
 // server cvar values
@@ -129,6 +131,16 @@ float avgPingFor            [TFMAXPLAYERS+1];
 float rateFor               [TFMAXPLAYERS+1];
 float ppsFor                [TFMAXPLAYERS+1];
 
+// autorecord
+int recordClient            [TFMAXPLAYERS+1];
+bool STVprepared            = false;
+bool STVSettingsChanged     = false;
+int Setting_tv_enable;
+int Setting_tv_autorecord;
+int Setting_tv_cameraman;
+int Setting_tv_snapshotrate;
+
+
 // time since the last stutter/lag spike occurred per client
 float timeSinceLagSpikeFor  [TFMAXPLAYERS+1];
 
@@ -146,6 +158,8 @@ bool livefeedActive = false;
 
 // Timer handles
 Handle QueryTimer           [TFMAXPLAYERS+1];
+Handle RecordTimer;
+Handle RestartMapTimer;
 
 // for checking if we just fixed a client's network settings so we don't double detect
 bool justClamped        [TFMAXPLAYERS+1];

@@ -617,6 +617,12 @@ void cmdnumspikeCheck(int cl)
             Format(pubreason, sizeof(pubreason), "%t", "cmdnumSpikesBanAllChat", cl, cmdnumSpikeDetects[cl]);
             BanUser(userid, reason, pubreason);
         }
+
+        // only record if we ban at 5 detections or more, otherwise there wouldnt be much to record
+        if (stac_max_cmdnum_detections.IntValue >= 5 && stac_autorecord.BoolValue)
+        {   
+            RequestRecording(cl);
+        }
     }
 }
 
@@ -755,6 +761,12 @@ void psilentCheck(int cl)
             char pubreason[256];
             Format(pubreason, sizeof(pubreason), "%t", "pSilentBanAllChat", cl, pSilentDetects[cl]);
             BanUser(userid, reason, pubreason);
+        }
+
+        // only record if we ban at 3 detections or more, otherwise there wouldnt be much to record
+        if (stac_max_cmdnum_detections.IntValue >= 3 && stac_autorecord.BoolValue)
+        {   
+            RequestRecording(cl);
         }
     }
 }
@@ -922,6 +934,12 @@ void aimsnapCheck(int cl)
             Format(pubreason, sizeof(pubreason), "%t", "AimsnapBanAllChat", cl, aimsnapDetects[cl]);
             BanUser(userid, reason, pubreason);
         }
+
+        // only record if we ban at 3 detections or more, otherwise there wouldnt be much to record
+        if (stac_max_cmdnum_detections.IntValue >= 3 && stac_autorecord.BoolValue)
+        {   
+            RequestRecording(cl);
+        }
     }
 }
 
@@ -1026,6 +1044,12 @@ void triggerbotCheck(int cl)
             char pubreason[256];
             Format(pubreason, sizeof(pubreason), "%t", "tbotBanAllChat", cl, tbotDetects[cl]);
             BanUser(userid, reason, pubreason);
+        }
+
+        // only record if we ban at 5 detections or more, otherwise there wouldnt be much to record
+        if (stac_max_cmdnum_detections.IntValue >= 3 && stac_autorecord.BoolValue)
+        {   
+            RequestRecording(cl);
         }
     }
 }

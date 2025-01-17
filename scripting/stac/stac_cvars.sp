@@ -395,6 +395,21 @@ void initCvars()
         1.0
     );
 
+    stac_autorecord =
+    AutoExecConfig_CreateConVar
+    (
+        "stac_autorecord",
+        "0",
+        "[StACv2] (BETA) Activate automatic SourceTV recording upon cmdnum spikes/pslient/aimnsnap/triggerbot detection.\n\
+        Requires a plugin reload!\n\
+        (recommended 0)",
+        FCVAR_NONE,
+        true,
+        0.0,
+        true,
+        1.0
+    );
+
     initUsercmdCvars();
     // actually exec the cfg after initing cvars lol
     AutoExecConfig_ExecuteFile();
@@ -429,6 +444,27 @@ public void GenericCvarChanged(ConVar convar, const char[] oldValue, const char[
     }
 }
 
+public void STVconvarChanged(ConVar convar, const char[] oldValue, const char[] newValue)
+{
+    if (!stac_autorecord.BoolValue)
+    {
+        return;
+    }
+
+    if ((convar == FindConVar("tv_enable")) && (StringToInt(newValue) != 1))
+    {
+        ServerCommand("tv_enable 1");
+        StacLog("Cvar conflict! \"tv_enable\" has been automatically set to 1. \
+        If you don't want StAC to override SourceTV settings, set stac_autorecord to 0.");
+    }
+
+    if ((convar == FindConVar("tv_autorecord")) && (StringToInt(newValue) != 0))
+    {
+        SetConVarInt(convar, 0);
+        StacLog("Cvar conflict! \"tv_autorecord\" has been automatically set to 0. \
+        If you don't want StAC to override SourceTV settings, set stac_autorecord to 0.");
+    }
+}
 
 void RunOptimizeCvars()
 {
