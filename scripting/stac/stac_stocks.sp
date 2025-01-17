@@ -642,7 +642,8 @@ void PrintToConsoleAllAdmins(const char[] format, any ...)
         {
             SetGlobalTransTarget(i);
             VFormat(buffer, sizeof(buffer), format, 2);
-            PrintToConsole(i, "%s", buffer);
+            PrintToConsole(i, "%s", buffer); /* <--- does not work for stv demos */
+            SourceTV_PrintToDemoConsole("%s", buffer); /*  but this does */
         }
     }
 }
