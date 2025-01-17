@@ -848,17 +848,15 @@ void StacNotify(int userid, const char[] prefmtedstring, int detections = 0)
     serverip_field.SetString("value", hostipandport);
     serverip_field.SetBool  ("inline", true);
 
-
-    // STV
-    GetDemoName();
-
-
-    JSON_Object demoname_field = new JSON_Object();
-    demoname_field.EnableOrderedKeys();
-    demoname_field.SetString("name", "Demo name");
-    demoname_field.SetString("value", demoname);
-    demoname_field.SetBool  ("inline", true);
-
+    JSON_Object demoname_field;
+    if (GetDemoName())
+    {
+        demoname_field = new JSON_Object();
+        demoname_field.EnableOrderedKeys();
+        demoname_field.SetString("name", "Demo name");
+        demoname_field.SetString("value", demoname);
+        demoname_field.SetBool  ("inline", true);
+    }
 
     JSON_Object demotick_field = new JSON_Object();
     demotick_field.EnableOrderedKeys();
@@ -1170,7 +1168,10 @@ void StacNotify(int userid, const char[] prefmtedstring, int detections = 0)
     fieldArray.PushObject(hostname_field);
     fieldArray.PushObject(serverip_field);
     fieldArray.PushObject(spacerCpy3);
-    fieldArray.PushObject(demoname_field);
+    if (GetDemoName())
+    {
+        fieldArray.PushObject(demoname_field);
+    }
     fieldArray.PushObject(demotick_field);
     fieldArray.PushObject(spacerCpy4);
     fieldArray.PushObject(gametime_field);
