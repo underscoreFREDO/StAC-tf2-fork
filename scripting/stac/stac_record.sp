@@ -158,7 +158,7 @@ void StacStartRecording(cl)
 	if (!SourceTV_StartRecording(fulldemoname))
 	{
 		// log something if the dumb bot fails to record
-		StacLog("ERROR: Auto recording failed! (unkown reason)");
+		StacLog("ERROR: Auto recording failed!");
 		char srctverrormsg[64];
 		Format(srctverrormsg, sizeof(srctverrormsg), " SourceTV failed to record player %N", cl);
 		StacNotify(0, srctverrormsg);
@@ -234,12 +234,11 @@ void StacStopRecording()
 		return;
 	}
 
-	// reset all clients record value
-	// is usually 0 at this point anyway
-	// mainly prevents map changes from breaking shit
-	for (int i = 0; i <= MaxClients; i++)
+	int size = sizeof(recordClient[]);
+	for (int i = 1; i < size; i++)
 	{
-		recordClient[i] = 0;
+		recordClient[i] = 0; 
+
 	}
 	SourceTV_StopRecording();
 	StacLog("Demo completed!");
@@ -282,6 +281,13 @@ void RestoreSTVSettings()
 	{
 		SetConVarInt(stvcvar, Setting_tv_snapshotrate, false, false);
 	}
+	
+/*  // discconect the stv bot
+	if (Setting_tv_enable == 0)
+	{
+		ServerCommand("tv_stop");
+	}
+*/
 }
 
 void TryConnectSTVbot()
